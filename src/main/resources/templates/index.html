@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="hu"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymleaf.org">
+<head>
+    <title>Contact Group Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .container {
+            width: 500px;
+        }
+        .panel-heading {
+            text-align: center;
+        }
+        .btn-default {
+            alignment: left;
+        }
+        .table-div {
+            padding-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" >
+    <div class="panel panel-primary">
+        <div class="panel-heading">Contacts</div>
+        <div class="panel-body">
+            <a href="/new_group" class="btn btn-default" role="button" th:text="${btnName}">Link Button</a>
+            <div class="table-div">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>PhoneNumber</th>
+                        <th>Email</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id = "loadRow">
+                        <!--add rows-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+
+        function loadRows() {
+
+            let result = "",
+            name = "",
+            phoneNumber = "",
+            eMail = "";
+
+            /*<![CDATA[*/
+            /*[# th:each="contact : ${contacts}" ]*/
+
+                name = /*[[${contact.name}]]*/;
+                phoneNumber = /*[[${contact.phoneNumber}]]*/;
+                eMail = /*[[${contact.eMail}]]*/;
+
+                result +=   "<tr>\n" +
+                            "<td>" + name + "</td>\n" +
+                            "<td>" + phoneNumber + "</td>\n" +
+                            "<td>" + eMail + "</td>\n" +
+                            "<td><a href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>\n" +
+                            "<td><a href=\"#\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>\n" +
+                            "</tr>";
+
+                /*[/]*/
+            /*]]>*/
+            return result;
+
+        }
+
+        document.getElementById("loadRow").innerHTML = loadRows();
+
+    </script>
+</div>
+
+</body>
+</html>
