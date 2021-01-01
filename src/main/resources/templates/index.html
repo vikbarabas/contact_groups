@@ -26,11 +26,34 @@
 </head>
 <body>
 
-<div class="container" >
+<div class="container">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">ContactGroups</div>
+        <div class="panel-body">
+            <a href="/newGroup" class="btn btn-default" role="button" th:text="${btnNewContactGroup}">New Contact Group Button</a>
+            <div class="table-div">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id = "loadContactGroups">
+                    <!--add rows-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="panel panel-primary">
         <div class="panel-heading">Contacts</div>
         <div class="panel-body">
-            <a href="/new_group" class="btn btn-default" role="button" th:text="${btnName}">Link Button</a>
+            <a href="/newContact" class="btn btn-default" role="button" th:text="${btnNewContact}">New Contact Button</a>
             <div class="table-div">
                 <table class="table">
                     <thead>
@@ -42,16 +65,65 @@
                         <th></th>
                     </tr>
                     </thead>
-                    <tbody id = "loadRow">
+                    <tbody id = "loadContacts">
                         <!--add rows-->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
     <script th:inline="javascript">
 
-        function loadRows() {
+        document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
+        function loadContactGroups() {
+
+            let result = "",
+            name = "";
+
+            /*<![CDATA[*/
+            /*[# th:each="contactGroup : ${contactGroups}" ]*/
+
+                name = /*[[${contactGroup.name}]]*/;
+
+                result +=   "<tr>\n" +
+                            "<td>\n" +
+                                "<form id=\"getGroupName\" action=\"/sendGroupName\" method=\"POST\">\n" +
+                                    "<input type=\"radio\" name=\"groupName\" id=\"rowRadio\" onclick=\"selectedRow()\" enabled>\n" +
+                                "</form>\n" +
+                            "</td>\n" +
+                            "<td id=\"groupName\">" + name + "</td>\n" +
+                            "<td>\n" +
+                                "<form id=\"sent\" name=\"something\" action=\"/something\" method=\"POST\">\n" +
+                                    "<input type=\"hidden\" name=\"rowNumber\" value=\"anything\">\n" +
+                                    "<a id=\"send\" onclick=\"editRow()\" href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span></a>\n" +
+                                "</form>\n" +
+                            "</td>\n" +
+                            "<td><a href=\"#\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>\n" +
+                            "</tr>";
+
+                /*[/]*/
+            /*]]>*/
+            return result;
+
+        }
+
+        /*test*/
+        function editRow() {
+            if (document.getElementById("rowRadio").disabled === true) {
+                document.getElementById("sent").submit();
+            } else {
+                alert(document.getElementById("groupName").innerText);
+            }
+        }
+
+        function selectedRow() {
+            document.getElementById("rowRadio").value = document.getElementById("groupName").innerText;
+            document.getElementById("getGroupName").submit();
+        }
+
+        document.getElementById("loadContacts").innerHTML = loadContacts();
+        function loadContacts() {
 
             let result = "",
             name = "",
@@ -79,9 +151,8 @@
 
         }
 
-        document.getElementById("loadRow").innerHTML = loadRows();
-
     </script>
+
 </div>
 
 </body>

@@ -1,26 +1,30 @@
 package hu.viktorbarabas.contact_group;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Contacts {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
     private long id;
-
     private String name;
     private String phoneNumber;
     private String eMail;
+    @ManyToOne
+    private ContactGroups contactGroups;
 
     public Contacts() {
     }
 
-    public Contacts(String name, String phoneNumber, String eMail) {
+    public Contacts(String name, String phoneNumber, String eMail, ContactGroups contactGroups) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.eMail = eMail;
+        this.contactGroups = contactGroups;
     }
 
     public long getId() {
@@ -55,4 +59,11 @@ public class Contacts {
         this.eMail = eMail;
     }
 
+    public ContactGroups getContactGroups() {
+        return contactGroups;
+    }
+
+    public void setContactGroups(ContactGroups contactGroups) {
+        this.contactGroups = contactGroups;
+    }
 }

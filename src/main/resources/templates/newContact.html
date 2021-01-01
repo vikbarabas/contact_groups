@@ -17,7 +17,7 @@
             <div class="panel-heading">Contacts</div>
             <div class="panel-body">
 
-                <form action="#" th:action="@{/}" th:object="${contacts}" method="post">
+                <form action="#" th:action="@{/addContact}" th:object="${contacts}" method="post">
                     <div class="form-group">
                         <label for="name">Name:</label>
                         <input type="text" th:field="*{name}" class="form-control" id="name">
