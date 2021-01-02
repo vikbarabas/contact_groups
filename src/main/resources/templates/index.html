@@ -108,18 +108,22 @@
 
         }
 
-        /*test*/
-        function editRow() {
-            if (document.getElementById("rowRadio").disabled === true) {
-                document.getElementById("sent").submit();
-            } else {
-                alert(document.getElementById("groupName").innerText);
-            }
-        }
-
         function selectedRow() {
-            document.getElementById("rowRadio").value = document.getElementById("groupName").innerText;
-            document.getElementById("getGroupName").submit();
+
+            var i;
+            for (i = 1; i < document.getElementsByTagName("tr").length; i++) {
+
+                if (document.getElementsByTagName("tr")[i].getElementsByTagName("input")[0].checked === true) {
+
+                    document.getElementsByTagName("tr")[i].getElementsByTagName("input")[0].value =
+                        document.getElementsByTagName("tr")[i].getElementsByTagName("td")[1].innerText;
+                    document.getElementsByTagName("tr")[i].getElementsByTagName("form")[0].submit();
+
+                    break;
+                }
+
+            }
+
         }
 
         document.getElementById("loadContacts").innerHTML = loadContacts();
