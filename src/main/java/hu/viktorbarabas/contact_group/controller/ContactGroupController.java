@@ -1,7 +1,7 @@
 package hu.viktorbarabas.contact_group.controller;
 
-import hu.viktorbarabas.contact_group.ContactGroups;
-import hu.viktorbarabas.contact_group.Contacts;
+import hu.viktorbarabas.contact_group.entities.ContactGroups;
+import hu.viktorbarabas.contact_group.entities.Contacts;
 import hu.viktorbarabas.contact_group.service.ContactGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +33,16 @@ public class ContactGroupController {
         return service.saveGroupObjectBySelectedRow(groupName, model);
     }
 
+    @RequestMapping(value = "/editGroup", method = RequestMethod.POST)
+    public String sendGroupBySelected(@RequestParam("groupName") String groupName, Model model) {
+        return service.sendGroupObjectBySelectedRow(groupName, model);
+    }
+
+    /*@RequestMapping(value = "/deleteGroup", method = RequestMethod.POST)
+    public String sendGroupBySelected(@RequestParam("groupName") String groupName, Model model) {
+        return service.sendGroupObjectBySelectedRow(groupName, model);
+    }*/
+
     @RequestMapping(value = "/newContact", method = RequestMethod.GET)
     public String newContactForm(Model model) {
         return service.createContactToNew(model);
@@ -47,15 +57,5 @@ public class ContactGroupController {
     public String saveNewContact(@ModelAttribute Contacts contacts, Model model) {
         return service.addContact(contacts, model);
     }
-
-    /*@RequestMapping(value = "/", method = RequestMethod.POST)
-    public String saveNewGroup(@ModelAttribute ContactGroups contactGroups, Model model) {
-        return service.addGroup(contactGroups, model);
-    }
-
-    @RequestMapping(value = "/something", method = RequestMethod.POST)
-    public String something(@RequestParam("rowNumber") String rowNumber) {
-        return "index";
-    }*/
 
 }

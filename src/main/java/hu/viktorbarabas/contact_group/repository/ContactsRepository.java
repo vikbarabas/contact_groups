@@ -1,6 +1,6 @@
 package hu.viktorbarabas.contact_group.repository;
 
-import hu.viktorbarabas.contact_group.Contacts;
+import hu.viktorbarabas.contact_group.entities.Contacts;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

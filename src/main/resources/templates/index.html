@@ -75,34 +75,82 @@
 
     <script th:inline="javascript">
 
+        let selectedRadioStatus = /*[[${status}]]*/ 'a';
+
         document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
         function loadContactGroups() {
 
             let result = "",
-            name = "";
+                name = "",
+                status = "",
+                input = "";
 
             /*<![CDATA[*/
             /*[# th:each="contactGroup : ${contactGroups}" ]*/
 
-                name = /*[[${contactGroup.name}]]*/;
+            name = /*[[${contactGroup.name}]]*/ 'name';
 
-                result +=   "<tr>\n" +
-                            "<td>\n" +
-                                "<form id=\"getGroupName\" action=\"/sendGroupName\" method=\"POST\">\n" +
-                                    "<input type=\"radio\" name=\"groupName\" id=\"rowRadio\" onclick=\"selectedRow()\" enabled>\n" +
-                                "</form>\n" +
-                            "</td>\n" +
-                            "<td id=\"groupName\">" + name + "</td>\n" +
-                            "<td>\n" +
-                                "<form id=\"sent\" name=\"something\" action=\"/something\" method=\"POST\">\n" +
-                                    "<input type=\"hidden\" name=\"rowNumber\" value=\"anything\">\n" +
-                                    "<a id=\"send\" onclick=\"editRow()\" href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span></a>\n" +
-                                "</form>\n" +
-                            "</td>\n" +
-                            "<td><a href=\"#\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>\n" +
-                            "</tr>";
+            result +=
+                "<tr>\n" +
+                    "<td>\n" +
+                        "<form id=\"getGroupName\" action=\"/sendGroupName\" method=\"POST\">\n" +
+                            "<input type=\"radio\" name=\"groupName\" id=\"rowRadio\" onclick=\"selectedRow()\">\n" +
+                        "</form>\n" +
+                    "</td>\n" +
+                    "<td id=\"groupName\">" + name + "</td>\n" +
+                    "<td>\n" +
+                        "<form id=\"editGroup\" action=\"/editGroup\" method=\"POST\">\n" +
+                            "<input type=\"hidden\" name=\"groupName\">\n" +
+                            "<a href=\"#\" onclick=\"updateOrDelete(1)\">" +
+                                "<span class=\"glyphicon glyphicon-pencil\"></span>" +
+                            "</a>\n" +
+                        "</form>\n" +
+                    "</td>\n" +
+                    "<td>" +
+                        "<form id=\"deleteGroup\" action=\"/deleteGroup\" method=\"POST\">\n" +
+                            "<input type=\"hidden\" name=\"groupName\">\n" +
+                            "<a href=\"#\" onclick=\"updateOrDelete(2)\" >" +
+                                "<span class=\"glyphicon glyphicon-trash\"></span>" +
+                            "</a>" +
+                        "</form>\n" +
+                    "</td>\n" +
+                "</tr>";
 
-                /*[/]*/
+            /*[/]*/
+            /*]]>*/
+
+            return result;
+
+        }
+
+        if (selectedRadioStatus !== "not") {
+            document.getElementsByTagName("tr")[selectedRadioStatus].getElementsByTagName("input")[0].checked = true;
+        }
+
+        document.getElementById("loadContacts").innerHTML = loadContacts();
+        function loadContacts() {
+
+            let result = "",
+                name = "",
+                phoneNumber = "",
+                eMail = "";
+
+            /*<![CDATA[*/
+            /*[# th:each="contact : ${contacts}" ]*/
+
+            name = /*[[${contact.name}]]*/ 'name';
+            phoneNumber = /*[[${contact.phoneNumber}]]*/ 'phoneNumber';
+            eMail = /*[[${contact.eMail}]]*/ 'email';
+
+            result +=   "<tr>\n" +
+                "<td>" + name + "</td>\n" +
+                "<td>" + phoneNumber + "</td>\n" +
+                "<td>" + eMail + "</td>\n" +
+                "<td><a href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>\n" +
+                "<td><a href=\"#\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>\n" +
+                "</tr>";
+
+            /*[/]*/
             /*]]>*/
             return result;
 
@@ -110,7 +158,7 @@
 
         function selectedRow() {
 
-            var i;
+            let i;
             for (i = 1; i < document.getElementsByTagName("tr").length; i++) {
 
                 if (document.getElementsByTagName("tr")[i].getElementsByTagName("input")[0].checked === true) {
@@ -126,32 +174,13 @@
 
         }
 
-        document.getElementById("loadContacts").innerHTML = loadContacts();
-        function loadContacts() {
+        function updateOrDelete(editOrTrash) {
 
-            let result = "",
-            name = "",
-            phoneNumber = "",
-            eMail = "";
-
-            /*<![CDATA[*/
-            /*[# th:each="contact : ${contacts}" ]*/
-
-                name = /*[[${contact.name}]]*/;
-                phoneNumber = /*[[${contact.phoneNumber}]]*/;
-                eMail = /*[[${contact.eMail}]]*/;
-
-                result +=   "<tr>\n" +
-                            "<td>" + name + "</td>\n" +
-                            "<td>" + phoneNumber + "</td>\n" +
-                            "<td>" + eMail + "</td>\n" +
-                            "<td><a href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>\n" +
-                            "<td><a href=\"#\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>\n" +
-                            "</tr>";
-
-                /*[/]*/
-            /*]]>*/
-            return result;
+            if (selectedRadioStatus !== "not") {
+                document.getElementsByTagName("tr")[selectedRadioStatus].getElementsByTagName("input")[editOrTrash].value =
+                    document.getElementsByTagName("tr")[selectedRadioStatus].getElementsByTagName("td")[1].innerText;
+                document.getElementsByTagName("tr")[selectedRadioStatus].getElementsByTagName("form")[editOrTrash].submit();
+            }
 
         }
 

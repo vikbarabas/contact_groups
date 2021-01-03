@@ -1,7 +1,7 @@
 package hu.viktorbarabas.contact_group.service;
 
-import hu.viktorbarabas.contact_group.ContactGroups;
-import hu.viktorbarabas.contact_group.Contacts;
+import hu.viktorbarabas.contact_group.entities.ContactGroups;
+import hu.viktorbarabas.contact_group.entities.Contacts;
 import hu.viktorbarabas.contact_group.repository.ContactGroupsRepository;
 import hu.viktorbarabas.contact_group.repository.ContactsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +65,7 @@ public class ContactGroupService {
         savedGroup = new ContactGroups();
         savedGroup = contactGroupsRepository.findById(groupName);
         initialize(model);
+        model.addAttribute("status", savedGroup.getId());
         return "index";
     }
 
@@ -96,29 +97,12 @@ public class ContactGroupService {
             model.addAttribute("contactGroups", contactGroups);
             model.addAttribute("contacts", contacts);
         }
+        model.addAttribute("status", "not");
 
     }
 
-    private void uploadContactList(Model model) {
-        model.addAttribute("btnNameCG", "New ContactGroup");
-        List<ContactGroups> contactGroups = new LinkedList<>();
-        if (contactGroupsRepository.findAll().size() < 1) {
-            Contacts contacts = new Contacts("Barabás Viktor", "06202690721", "dghost@gmail.com", null);
-            contactsRepository.save(contacts);
-            contactGroups.add(new ContactGroups("Proba"));
-            contactGroupsRepository.save(contactGroups.get(0));
-        }
-        model.addAttribute("contactGroups", contactGroups);
-
-        model.addAttribute("btnNameC", "New Contact");
-        List<Contacts> contacts = new LinkedList<>();
-        if (contactsRepository.findAll().size() > 0){
-            contacts = contactsRepository.findAll();
-        } else {
-            contacts.add(new Contacts("empty", "empty", "empty", null));
-        }
-        model.addAttribute("contacts", contacts);
-
+    public String sendGroupObjectBySelectedRow(String groupName, Model model) {
+        model.addAttribute("contactGroups", contactGroupsRepository.findById(groupName));
+        return "newGroup";
     }
-
 }

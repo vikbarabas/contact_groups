@@ -20,7 +20,7 @@
             <form action="#" th:action="@{/addGroup}" th:object="${contactGroups}" method="POST">
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" th:field="*{name}" class="form-control" id="name">
+                    <input type="text" th:field="*{name}" class="form-control" id="name" th:text="${name}">
                 </div>
                 <button type="submit" class="btn btn-default" value="submit">Submit</button>
             </form>

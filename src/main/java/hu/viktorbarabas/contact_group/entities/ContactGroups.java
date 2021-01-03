@@ -1,4 +1,4 @@
-package hu.viktorbarabas.contact_group;
+package hu.viktorbarabas.contact_group.entities;
 
 import org.hibernate.annotations.GenericGenerator;
 
