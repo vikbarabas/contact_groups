@@ -75,15 +75,13 @@
 
     <script th:inline="javascript">
 
-        let selectedRadioStatus = /*[[${status}]]*/ 'a';
+        let selectedRadioBtnStatus = /*[[${status}]]*/ -1;
 
         document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
         function loadContactGroups() {
 
             let result = "",
-                name = "",
-                status = "",
-                input = "";
+                name = "";
 
             /*<![CDATA[*/
             /*[# th:each="contactGroup : ${contactGroups}" ]*/
@@ -95,6 +93,7 @@
                     "<td>\n" +
                         "<form id=\"getGroupName\" action=\"/sendGroupName\" method=\"POST\">\n" +
                             "<input type=\"radio\" name=\"groupName\" id=\"rowRadio\" onclick=\"selectedRow()\">\n" +
+                            "<input type=\"hidden\" name=\"rowCount\">\n" +
                         "</form>\n" +
                     "</td>\n" +
                     "<td id=\"groupName\">" + name + "</td>\n" +
@@ -123,8 +122,8 @@
 
         }
 
-        if (selectedRadioStatus !== "not") {
-            document.getElementsByTagName("tr")[selectedRadioStatus].getElementsByTagName("input")[0].checked = true;
+        if (selectedRadioBtnStatus !== -1) {
+            document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("input")[0].checked = true;
         }
 
         document.getElementById("loadContacts").innerHTML = loadContacts();
@@ -165,6 +164,9 @@
 
                     document.getElementsByTagName("tr")[i].getElementsByTagName("input")[0].value =
                         document.getElementsByTagName("tr")[i].getElementsByTagName("td")[1].innerText;
+
+                    document.getElementsByTagName("tr")[i].getElementsByTagName("input")[1].value = i;
+
                     document.getElementsByTagName("tr")[i].getElementsByTagName("form")[0].submit();
 
                     break;
@@ -174,12 +176,12 @@
 
         }
 
-        function updateOrDelete(editOrTrash) {
+        function updateOrDelete(operation) {
 
-            if (selectedRadioStatus !== "not") {
-                document.getElementsByTagName("tr")[selectedRadioStatus].getElementsByTagName("input")[editOrTrash].value =
-                    document.getElementsByTagName("tr")[selectedRadioStatus].getElementsByTagName("td")[1].innerText;
-                document.getElementsByTagName("tr")[selectedRadioStatus].getElementsByTagName("form")[editOrTrash].submit();
+            if (selectedRadioBtnStatus !== "not") {
+                document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("input")[operation].value =
+                    document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("td")[1].innerText;
+                document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("form")[operation].submit();
             }
 
         }

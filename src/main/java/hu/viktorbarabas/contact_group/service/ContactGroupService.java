@@ -18,6 +18,8 @@ public class ContactGroupService {
     private ContactsRepository contactsRepository;
 
     private ContactGroups savedGroup;
+    private int rowCount;
+    private boolean isEdit;
 
     @Autowired
     public void setContactGroupsRepository(ContactGroupsRepository contactGroupsRepository) {
@@ -45,9 +47,14 @@ public class ContactGroupService {
         return "newContact";
     }
 
-    // test
     public String addGroup(ContactGroups contactGroups, Model model) {
-        contactGroupsRepository.save(contactGroups);
+        if (!isEdit) {
+            contactGroupsRepository.save(contactGroups);
+        } else {
+            isEdit = false;
+            savedGroup.setName(contactGroups.getName());
+            contactGroupsRepository.save(savedGroup);
+        }
         initialize(model);
         return "index";
     }
@@ -61,11 +68,20 @@ public class ContactGroupService {
         return "index";
     }
 
-    public String saveGroupObjectBySelectedRow(String groupName, Model model) {
-        savedGroup = new ContactGroups();
-        savedGroup = contactGroupsRepository.findById(groupName);
+    public String updateSelectedGroup(Model model) {
+        isEdit = true;
+        model.addAttribute("contactGroups", savedGroup);
+        return "newGroup";
+    }
+
+    public String saveGroupObjectBySelectedRow(String groupName, int rowCountIn, Model model) {
+        if (savedGroup == null) {
+            rowCount = rowCountIn;
+            savedGroup = new ContactGroups();
+            savedGroup = contactGroupsRepository.findById(groupName);
+        }
         initialize(model);
-        model.addAttribute("status", savedGroup.getId());
+        model.addAttribute("status", rowCount);
         return "index";
     }
 
@@ -80,7 +96,7 @@ public class ContactGroupService {
         if (contactGroups.isEmpty()) {
             model.addAttribute("contactGroups", new ContactGroups("empty"));
             model.addAttribute("btnNewContact", "-");
-            model.addAttribute("contacts" ,new Contacts("-", "-", "-", null));
+            model.addAttribute("contacts", new Contacts("-", "-", "-", null));
         } else {
             List<Contacts> contacts = new LinkedList<>();
             long groupId;
@@ -97,12 +113,8 @@ public class ContactGroupService {
             model.addAttribute("contactGroups", contactGroups);
             model.addAttribute("contacts", contacts);
         }
-        model.addAttribute("status", "not");
+        model.addAttribute("status", -1);
 
     }
 
-    public String sendGroupObjectBySelectedRow(String groupName, Model model) {
-        model.addAttribute("contactGroups", contactGroupsRepository.findById(groupName));
-        return "newGroup";
-    }
 }

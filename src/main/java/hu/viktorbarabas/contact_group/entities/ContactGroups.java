@@ -10,13 +10,6 @@ import javax.persistence.Id;
 @Entity
 public class ContactGroups {
 
-    /**
-     * Nem volt elég az
-     * "@Id"
-     * "@GeneratedValue"
-     * mert itt a "ContactGroups"nál 2 lett az első id...?
-     * Emiatt kellett ez a sok szar
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")

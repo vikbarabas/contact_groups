@@ -16,4 +16,8 @@ public interface ContactGroupsRepository extends CrudRepository<ContactGroups, L
 
     @Query(value = "SELECT cp FROM ContactGroups cp WHERE cp.name = :name")
     ContactGroups findById(@Param("name") String name);
+
+    @Query(value = "UPDATE ContactGroups cp SET cp.name = :groupName WHERE cp.id = :groupId")
+    void update(@Param("groupId") long groupId, @Param("groupName") String groupName);
+
 }

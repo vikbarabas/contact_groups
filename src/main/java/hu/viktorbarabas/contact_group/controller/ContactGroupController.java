@@ -29,13 +29,16 @@ public class ContactGroupController {
     }
 
     @RequestMapping(value = "/sendGroupName", method = RequestMethod.POST)
-    public String getGroupNameBySelected(@RequestParam("groupName") String groupName, Model model) {
-        return service.saveGroupObjectBySelectedRow(groupName, model);
+    public String getGroupNameBySelected(
+            @RequestParam("groupName") String groupName,
+            @RequestParam("rowCount") int rowCount,
+            Model model) {
+        return service.saveGroupObjectBySelectedRow(groupName, rowCount, model);
     }
 
     @RequestMapping(value = "/editGroup", method = RequestMethod.POST)
-    public String sendGroupBySelected(@RequestParam("groupName") String groupName, Model model) {
-        return service.sendGroupObjectBySelectedRow(groupName, model);
+    public String sendGroupBySelected(Model model) {
+        return service.updateSelectedGroup(model);
     }
 
     /*@RequestMapping(value = "/deleteGroup", method = RequestMethod.POST)
