@@ -36,15 +36,15 @@ public class ContactGroupController {
         return service.saveGroupObjectBySelectedRow(groupName, rowCount, model);
     }
 
-    @RequestMapping(value = "/editGroup", method = RequestMethod.POST)
-    public String sendGroupBySelected(Model model) {
+    @RequestMapping(value = "/editGroup", method = RequestMethod.GET)
+    public String toEditGroup(Model model) {
         return service.updateSelectedGroup(model);
     }
 
-    /*@RequestMapping(value = "/deleteGroup", method = RequestMethod.POST)
-    public String sendGroupBySelected(@RequestParam("groupName") String groupName, Model model) {
-        return service.sendGroupObjectBySelectedRow(groupName, model);
-    }*/
+    @RequestMapping(value = "/deleteGroup", method = RequestMethod.GET)
+    public String toDeleteGroup(Model model) {
+        return service.deleteSelectedGroup(model);
+    }
 
     @RequestMapping(value = "/newContact", method = RequestMethod.GET)
     public String newContactForm(Model model) {

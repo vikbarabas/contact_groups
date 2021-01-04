@@ -51,7 +51,7 @@
     </div>
 
     <div class="panel panel-primary">
-        <div class="panel-heading">Contacts</div>
+        <div class="panel-heading" th:text="${panelHeadLabel} ?: 'Contacts'">Contacts</div>
         <div class="panel-body">
             <a href="/newContact" class="btn btn-default" role="button" th:text="${btnNewContact}">New Contact Button</a>
             <div class="table-div">
@@ -98,20 +98,14 @@
                     "</td>\n" +
                     "<td id=\"groupName\">" + name + "</td>\n" +
                     "<td>\n" +
-                        "<form id=\"editGroup\" action=\"/editGroup\" method=\"POST\">\n" +
-                            "<input type=\"hidden\" name=\"groupName\">\n" +
-                            "<a href=\"#\" onclick=\"updateOrDelete(1)\">" +
-                                "<span class=\"glyphicon glyphicon-pencil\"></span>" +
-                            "</a>\n" +
-                        "</form>\n" +
+                        "<a href=\"/editGroup\">" +
+                            "<span class=\"glyphicon glyphicon-pencil\"></span>" +
+                        "</a>\n" +
                     "</td>\n" +
                     "<td>" +
-                        "<form id=\"deleteGroup\" action=\"/deleteGroup\" method=\"POST\">\n" +
-                            "<input type=\"hidden\" name=\"groupName\">\n" +
-                            "<a href=\"#\" onclick=\"updateOrDelete(2)\" >" +
-                                "<span class=\"glyphicon glyphicon-trash\"></span>" +
-                            "</a>" +
-                        "</form>\n" +
+                        "<a href=\"/deleteGroup\">" +
+                            "<span class=\"glyphicon glyphicon-trash\"></span>" +
+                        "</a>" +
                     "</td>\n" +
                 "</tr>";
 
@@ -157,6 +151,11 @@
 
         function selectedRow() {
 
+            if (selectedRadioBtnStatus !== -1) {
+                if (document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("input")[0].checked === true)
+                    document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("input")[0].checked = false;
+            }
+
             let i;
             for (i = 1; i < document.getElementsByTagName("tr").length; i++) {
 
@@ -172,16 +171,6 @@
                     break;
                 }
 
-            }
-
-        }
-
-        function updateOrDelete(operation) {
-
-            if (selectedRadioBtnStatus !== "not") {
-                document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("input")[operation].value =
-                    document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("td")[1].innerText;
-                document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("form")[operation].submit();
             }
 
         }

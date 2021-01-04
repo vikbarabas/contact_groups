@@ -74,14 +74,24 @@ public class ContactGroupService {
         return "newGroup";
     }
 
+    public String deleteSelectedGroup(Model model) {
+        contactGroupsRepository.delete(savedGroup);
+        initialize(model);
+        return "index";
+    }
+
     public String saveGroupObjectBySelectedRow(String groupName, int rowCountIn, Model model) {
         if (savedGroup == null) {
             rowCount = rowCountIn;
             savedGroup = new ContactGroups();
             savedGroup = contactGroupsRepository.findById(groupName);
         }
+        if (!savedGroup.getName().equals("") && !savedGroup.getName().equals(groupName)) {
+            rowCount = rowCountIn;
+            savedGroup = contactGroupsRepository.findById(groupName);
+        }
         initialize(model);
-        model.addAttribute("status", rowCount);
+        model.addAttribute("status", rowCountIn);
         return "index";
     }
 
@@ -104,6 +114,7 @@ public class ContactGroupService {
                 groupId = contactGroups.get(0).getId();
             } else {
                 groupId = savedGroup.getId();
+                model.addAttribute("panelHeadLabel", savedGroup.getName());
             }
             if (!contactsRepository.findAllByContactGroupsId(groupId).isEmpty()) {
                 contacts = contactsRepository.findAllByContactGroupsId(groupId);
