@@ -20,6 +20,7 @@ public class ContactGroupService {
     private ContactGroups savedGroup;
     private int rowCount;
     private boolean isEdit;
+    private String errId = "ok";
 
     @Autowired
     public void setContactGroupsRepository(ContactGroupsRepository contactGroupsRepository) {
@@ -43,6 +44,11 @@ public class ContactGroupService {
     }
 
     public String createContactToNew(Model model) {
+        if (rowCount == 0) {
+            errId = "err";
+            initialize(model);
+            return "index";
+        }
         model.addAttribute("contacts", new Contacts());
         return "newContact";
     }
@@ -69,13 +75,22 @@ public class ContactGroupService {
     }
 
     public String updateSelectedGroup(Model model) {
+        if (rowCount == 0) {
+            errId = "err";
+            initialize(model);
+            return "index";
+        }
         isEdit = true;
         model.addAttribute("contactGroups", savedGroup);
         return "newGroup";
     }
 
     public String deleteSelectedGroup(Model model) {
-        contactGroupsRepository.delete(savedGroup);
+        if (rowCount != 0) {
+            contactGroupsRepository.delete(savedGroup);
+        } else {
+            errId = "err";
+        }
         initialize(model);
         return "index";
     }
@@ -91,7 +106,7 @@ public class ContactGroupService {
             savedGroup = contactGroupsRepository.findById(groupName);
         }
         initialize(model);
-        model.addAttribute("status", rowCountIn);
+        model.addAttribute("groupBtnStatus", rowCountIn);
         return "index";
     }
 
@@ -124,7 +139,9 @@ public class ContactGroupService {
             model.addAttribute("contactGroups", contactGroups);
             model.addAttribute("contacts", contacts);
         }
-        model.addAttribute("status", -1);
+        model.addAttribute("groupBtnStatus", -1);
+        model.addAttribute("errMessage", errId);
+        errId = "ok";
 
     }
 

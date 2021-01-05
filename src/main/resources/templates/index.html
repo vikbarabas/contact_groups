@@ -58,6 +58,7 @@
                 <table class="table">
                     <thead>
                     <tr>
+                        <th></th>
                         <th>Name</th>
                         <th>PhoneNumber</th>
                         <th>Email</th>
@@ -75,7 +76,9 @@
 
     <script th:inline="javascript">
 
-        let selectedRadioBtnStatus = /*[[${status}]]*/ -1;
+        let err = /*[[${errMessage}]]*/ "ok";
+
+        let selectedGroupRadioBtnStatus = /*[[${groupBtnStatus}]]*/ -1;
 
         document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
         function loadContactGroups() {
@@ -116,8 +119,10 @@
 
         }
 
-        if (selectedRadioBtnStatus !== -1) {
-            document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("input")[0].checked = true;
+        if (selectedGroupRadioBtnStatus !== -1) {
+            document.getElementsByTagName("tr")[selectedGroupRadioBtnStatus]
+                .getElementsByTagName("input")[0]
+                .checked = true;
         }
 
         document.getElementById("loadContacts").innerHTML = loadContacts();
@@ -135,12 +140,27 @@
             phoneNumber = /*[[${contact.phoneNumber}]]*/ 'phoneNumber';
             eMail = /*[[${contact.eMail}]]*/ 'email';
 
-            result +=   "<tr>\n" +
-                "<td>" + name + "</td>\n" +
-                "<td>" + phoneNumber + "</td>\n" +
-                "<td>" + eMail + "</td>\n" +
-                "<td><a href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span></a></td>\n" +
-                "<td><a href=\"#\"><span class=\"glyphicon glyphicon-trash\"></span></a></td>\n" +
+            result +=
+                "<tr>\n" +
+                    "<td>\n" +
+                        "<form id=\"\" action=\"\" method=\"POST\">\n" +
+                            "<input type=\"radio\" name=\"\" id=\"rowRadio\" onclick=\"\">\n" +
+                            "<input type=\"hidden\" name=\"rowCount\">\n" +
+                        "</form>\n" +
+                    "</td>\n" +
+                    "<td>" + name + "</td>\n" +
+                    "<td>" + phoneNumber + "</td>\n" +
+                    "<td>" + eMail + "</td>\n" +
+                    "<td>\n" +
+                        "<a href=\"\">" +
+                            "<span class=\"glyphicon glyphicon-pencil\"></span>" +
+                        "</a>\n" +
+                    "</td>\n" +
+                    "<td>" +
+                        "<a href=\"\">" +
+                            "<span class=\"glyphicon glyphicon-trash\"></span>" +
+                        "</a>" +
+                    "</td>\n" +
                 "</tr>";
 
             /*[/]*/
@@ -151,9 +171,15 @@
 
         function selectedRow() {
 
-            if (selectedRadioBtnStatus !== -1) {
-                if (document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("input")[0].checked === true)
-                    document.getElementsByTagName("tr")[selectedRadioBtnStatus].getElementsByTagName("input")[0].checked = false;
+            if (selectedGroupRadioBtnStatus !== -1) {
+                if (document.getElementsByTagName("tr")[selectedGroupRadioBtnStatus]
+                    .getElementsByTagName("input")[0]
+                    .checked === true) {
+
+                    document.getElementsByTagName("tr")[selectedGroupRadioBtnStatus]
+                        .getElementsByTagName("input")[0]
+                        .checked = false;
+                }
             }
 
             let i;
@@ -173,6 +199,11 @@
 
             }
 
+        }
+
+        if (err !== "ok") {
+            err = "ok";
+            alert("Ki kell jelőlnie egy sort!");
         }
 
     </script>
