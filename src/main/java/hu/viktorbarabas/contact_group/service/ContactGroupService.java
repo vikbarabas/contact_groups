@@ -20,7 +20,6 @@ public class ContactGroupService {
     private ContactGroups savedGroup;
     private int rowCount;
     private boolean isEdit;
-    private String errId = "ok";
 
     @Autowired
     public void setContactGroupsRepository(ContactGroupsRepository contactGroupsRepository) {
@@ -33,9 +32,7 @@ public class ContactGroupService {
     }
 
     public String getIndex(Model model) {
-        initialize(model);
-        return "index";
-
+        return initialize(model);
     }
 
     public String createGroupToNew(Model model) {
@@ -45,9 +42,8 @@ public class ContactGroupService {
 
     public String createContactToNew(Model model) {
         if (rowCount == 0) {
-            errId = "err";
-            initialize(model);
-            return "index";
+            rowCount = -1;
+            return initialize(model);
         }
         model.addAttribute("contacts", new Contacts());
         return "newContact";
@@ -61,8 +57,7 @@ public class ContactGroupService {
             savedGroup.setName(contactGroups.getName());
             contactGroupsRepository.save(savedGroup);
         }
-        initialize(model);
-        return "index";
+        return initialize(model);
     }
 
     public String addContact(Contacts contacts, Model model) {
@@ -70,15 +65,13 @@ public class ContactGroupService {
             contacts.setContactGroups(savedGroup);
             contactsRepository.save(contacts);
         }
-        initialize(model);
-        return "index";
+        return initialize(model);
     }
 
     public String updateSelectedGroup(Model model) {
         if (rowCount == 0) {
-            errId = "err";
+            rowCount = -1;
             initialize(model);
-            return "index";
         }
         isEdit = true;
         model.addAttribute("contactGroups", savedGroup);
@@ -89,10 +82,10 @@ public class ContactGroupService {
         if (rowCount != 0) {
             contactGroupsRepository.delete(savedGroup);
         } else {
-            errId = "err";
+            rowCount = -1;
         }
-        initialize(model);
-        return "index";
+
+        return initialize(model);
     }
 
     public String saveGroupObjectBySelectedRow(String groupName, int rowCountIn, Model model) {
@@ -105,12 +98,10 @@ public class ContactGroupService {
             rowCount = rowCountIn;
             savedGroup = contactGroupsRepository.findById(groupName);
         }
-        initialize(model);
-        model.addAttribute("groupBtnStatus", rowCountIn);
-        return "index";
+        return initialize(model);
     }
 
-    private void initialize(Model model) {
+    private String initialize(Model model) {
 
         model.addAttribute("btnNewContactGroup", "New Contact Group");
         List<ContactGroups> contactGroups = new LinkedList<>();
@@ -139,9 +130,10 @@ public class ContactGroupService {
             model.addAttribute("contactGroups", contactGroups);
             model.addAttribute("contacts", contacts);
         }
-        model.addAttribute("groupBtnStatus", -1);
-        model.addAttribute("errMessage", errId);
-        errId = "ok";
+        model.addAttribute("noSelectedRowException", rowCount);
+        rowCount = 0;
+
+        return "index";
 
     }
 

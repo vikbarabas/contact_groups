@@ -76,9 +76,10 @@
 
     <script th:inline="javascript">
 
-        let err = /*[[${errMessage}]]*/ "ok";
-
-        let selectedGroupRadioBtnStatus = /*[[${groupBtnStatus}]]*/ -1;
+        let selectedGroupRadioBtnStatus = /*[[${noSelectedRowException}]]*/ 0;
+        if (selectedGroupRadioBtnStatus === -1) {
+            alert("Sor nincs kiválasztva!");
+        }
 
         document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
         function loadContactGroups() {
@@ -89,7 +90,7 @@
             /*<![CDATA[*/
             /*[# th:each="contactGroup : ${contactGroups}" ]*/
 
-            name = /*[[${contactGroup.name}]]*/ 'name';
+            name = /*[[${contactGroup.name}]]*/ "name";
 
             result +=
                 "<tr>\n" +
@@ -199,11 +200,6 @@
 
             }
 
-        }
-
-        if (err !== "ok") {
-            err = "ok";
-            alert("Ki kell jelőlnie egy sort!");
         }
 
     </script>
