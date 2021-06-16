@@ -1,5 +1,5 @@
 # contact_groups - egyszerű névjegyzék applikáció
-  Java beckend/frontend (Spring Boot, Thymeleaf, JavaScript, BootStrap)
+  Java backend/frontend (Spring Boot, Thymeleaf, JavaScript, BootStrap)
   
 Jellemzők:
   - Új kontakt felvétele
