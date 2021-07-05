@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class ContactGroups {
+public class ContactGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
@@ -16,10 +16,10 @@ public class ContactGroups {
     private long id;
     private String name;
 
-    public ContactGroups() {
+    public ContactGroup() {
     }
 
-    public ContactGroups(String name) {
+    public ContactGroup(String name) {
         this.name = name;
     }
 

@@ -5,7 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-public class Contacts {
+public class Contact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
@@ -13,18 +13,18 @@ public class Contacts {
     private long id;
     private String name;
     private String phoneNumber;
-    private String eMail;
+    private String email;
     @ManyToOne
-    private ContactGroups contactGroups;
+    private ContactGroup contactGroup;
 
-    public Contacts() {
+    public Contact() {
     }
 
-    public Contacts(String name, String phoneNumber, String eMail, ContactGroups contactGroups) {
+    public Contact(String name, String phoneNumber, String email, ContactGroup contactGroup) {
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.eMail = eMail;
-        this.contactGroups = contactGroups;
+        this.email = email;
+        this.contactGroup = contactGroup;
     }
 
     public long getId() {
@@ -51,19 +51,19 @@ public class Contacts {
         this.phoneNumber = phoneNumber;
     }
 
-    public String geteMail() {
-        return eMail;
+    public String getEmail() {
+        return email;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
+    public void setEmail(String eMail) {
+        this.email = eMail;
     }
 
-    public ContactGroups getContactGroups() {
-        return contactGroups;
+    public ContactGroup getContactGroups() {
+        return contactGroup;
     }
 
-    public void setContactGroups(ContactGroups contactGroups) {
-        this.contactGroups = contactGroups;
+    public void setContactGroups(ContactGroup contactGroup) {
+        this.contactGroup = contactGroup;
     }
 }

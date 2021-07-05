@@ -1,7 +1,7 @@
 package hu.viktorbarabas.contact_group.controller;
 
-import hu.viktorbarabas.contact_group.entities.ContactGroups;
-import hu.viktorbarabas.contact_group.entities.Contacts;
+import hu.viktorbarabas.contact_group.entities.Contact;
+import hu.viktorbarabas.contact_group.entities.ContactGroup;
 import hu.viktorbarabas.contact_group.service.ContactGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,47 +18,63 @@ public class ContactGroupController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/")
     public String index(Model model) {
         return service.getIndex(model);
     }
 
-    @RequestMapping(value = "/newGroup", method = RequestMethod.GET)
-    public String newGroupForm(Model model) {
-        return service.createGroupToNew(model);
+    @GetMapping(value = "/newGroup")
+    public String createGroup(Model model) {
+        return service.createGroup(model);
+    }
+    @GetMapping(value = "/newContact")
+    public String createContact(Model model) {
+        return service.createContact(model);
     }
 
-    @RequestMapping(value = "/sendGroupName", method = RequestMethod.POST)
-    public String getGroupNameBySelected(
+    @PostMapping(value = "/addGroup")
+    public String addGroup(
+            @ModelAttribute ContactGroup contactGroup,
+            Model model) {
+        return service.addGroup(contactGroup, model);
+    }
+    @PostMapping(value = "/addContact")
+    public String addContact(
+            @ModelAttribute Contact contact,
+            Model model) {
+        return service.addContact(contact, model);
+    }
+
+    @PostMapping(value = "/selectGroup")
+    public String selectGroup(
             @RequestParam("groupName") String groupName,
             @RequestParam("rowCount") int rowCount,
             Model model) {
-        return service.saveGroupObjectBySelectedRow(groupName, rowCount, model);
+        return service.selectGroup(groupName, rowCount, model);
+    }
+    @PostMapping(value = "/selectContact")
+    public String selectContact(
+            @RequestParam("contactName") String contactName,
+            @RequestParam("rowCount") int rowCount,
+            Model model) {
+        return service.selectContact(contactName, rowCount, model);
     }
 
-    @RequestMapping(value = "/editGroup", method = RequestMethod.GET)
-    public String toEditGroup(Model model) {
-        return service.updateSelectedGroup(model);
+    @GetMapping(value = "/editGroup")
+    public String editGroup(Model model) {
+        return service.updateGroup(model);
     }
-
-    @RequestMapping(value = "/deleteGroup", method = RequestMethod.GET)
-    public String toDeleteGroup(Model model) {
-        return service.deleteSelectedGroup(model);
+    @GetMapping(value = "/editContact")
+    public String editContact(Model model) {
+        return service.updateContact(model);
     }
-
-    @RequestMapping(value = "/newContact", method = RequestMethod.GET)
-    public String newContactForm(Model model) {
-        return service.createContactToNew(model);
+    @GetMapping(value = "/deleteGroup")
+    public String deleteGroup(Model model) {
+        return service.deleteGroup(model);
     }
-
-    @RequestMapping(value = "/addGroup", method = RequestMethod.POST)
-    public String saveNewGroup(@ModelAttribute ContactGroups contactGroups, Model model) {
-        return service.addGroup(contactGroups, model);
-    }
-
-    @RequestMapping(value = "/addContact", method = RequestMethod.POST)
-    public String saveNewContact(@ModelAttribute Contacts contacts, Model model) {
-        return service.addContact(contacts, model);
+    @GetMapping(value = "/deleteContact")
+    public String deleteContact(Model model) {
+        return service.deleteContact(model);
     }
 
 }

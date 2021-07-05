@@ -1,7 +1,7 @@
 package hu.viktorbarabas.contact_group.service;
 
-import hu.viktorbarabas.contact_group.entities.ContactGroups;
-import hu.viktorbarabas.contact_group.entities.Contacts;
+import hu.viktorbarabas.contact_group.entities.ContactGroup;
+import hu.viktorbarabas.contact_group.entities.Contact;
 import hu.viktorbarabas.contact_group.repository.ContactGroupsRepository;
 import hu.viktorbarabas.contact_group.repository.ContactsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,13 @@ public class ContactGroupService {
     private ContactGroupsRepository contactGroupsRepository;
     private ContactsRepository contactsRepository;
 
-    private ContactGroups savedGroup;
-    private int rowCount;
-    private boolean isEdit;
+    private ContactGroup existGroups;
+    private Contact existContact;
+
+    private int selectRow;
+    private int selectedRow;
+
+    private boolean isEditing;
 
     @Autowired
     public void setContactGroupsRepository(ContactGroupsRepository contactGroupsRepository) {
@@ -32,109 +36,164 @@ public class ContactGroupService {
     }
 
     public String getIndex(Model model) {
-        return initialize(model);
+        return initializing(model);
     }
 
-    public String createGroupToNew(Model model) {
-        model.addAttribute("contactGroups", new ContactGroups());
+    private String initializing(Model model) {
+
+        model.addAttribute("btnNewContactGroup", "New Contact Group");
+        model.addAttribute("btnNewContact", "New Contact");
+
+        List<ContactGroup> group = new LinkedList<>(contactGroupsRepository.findAll());
+        if (group.isEmpty()) {
+
+            model.addAttribute("contactGroups", new ContactGroup("empty"));
+            model.addAttribute("btnNewContact", "-");
+            model.addAttribute("contacts", new Contact("-", "-", "-", null));
+
+        } else {
+
+            long groupId;
+            if (existGroups == null) {
+
+                groupId = group.get(0).getId();
+
+            } else {
+
+                groupId = existGroups.getId();
+                model.addAttribute("panelHeadLabel", existGroups.getName());
+
+            }
+
+            List<Contact> contacts = new LinkedList<>(contactsRepository.findAllByContactGroupsId(groupId));
+            if (contacts.isEmpty()) {
+
+                contacts.add(new Contact("empty", "empty", "empty", null));
+
+            }
+            model.addAttribute("contactGroups", group);
+            model.addAttribute("contacts", contacts);
+
+        }
+
+        model.addAttribute("currSelectedGroup", selectRow);
+        selectRow = 0;
+
+        return "index";
+    }
+
+    public String createGroup(Model model) {
+
+        model.addAttribute("contactGroups", new ContactGroup());
+
         return "newGroup";
     }
 
-    public String createContactToNew(Model model) {
-        if (rowCount == 0) {
-            rowCount = -1;
-            return initialize(model);
-        }
-        model.addAttribute("contacts", new Contacts());
+    public String createContact(Model model) {
+
+        model.addAttribute("contacts", new Contact());
+
         return "newContact";
     }
 
-    public String addGroup(ContactGroups contactGroups, Model model) {
-        if (!isEdit) {
-            contactGroupsRepository.save(contactGroups);
+    public String addGroup(ContactGroup contactGroup, Model model) {
+
+        if (!isEditing) {
+
+            contactGroupsRepository.save(contactGroup);
+
         } else {
-            isEdit = false;
-            savedGroup.setName(contactGroups.getName());
-            contactGroupsRepository.save(savedGroup);
+
+            isEditing = false;
+            existGroups.setName(contactGroup.getName());
+            contactGroupsRepository.save(existGroups);
+
         }
-        return initialize(model);
+
+        return initializing(model);
     }
 
-    public String addContact(Contacts contacts, Model model) {
-        if (savedGroup != null) {
-            contacts.setContactGroups(savedGroup);
-            contactsRepository.save(contacts);
+    public String addContact(Contact contact, Model model) {
+
+        if (!isEditing) {
+
+            contact.setContactGroups(existGroups);
+            contactsRepository.save(contact);
+
+        } else {
+
+            isEditing = false;
+            existContact.setName(contact.getName());
+            existContact.setEmail(contact.getEmail());
+            existContact.setPhoneNumber(contact.getPhoneNumber());
+            contactsRepository.save(existContact);
+
         }
-        return initialize(model);
+
+        return initializing(model);
     }
 
-    public String updateSelectedGroup(Model model) {
-        if (rowCount == 0) {
-            rowCount = -1;
-            initialize(model);
+    public String selectGroup(String groupName, int rowCount, Model model) {
+
+        if (!groupName.equals("empty")) {
+
+            selectRow = rowCount; // save row count
+            selectedRow = selectRow;
+
+            if (existGroups == null)
+                existGroups = new ContactGroup();
+            existGroups = contactGroupsRepository.findById(groupName);
         }
-        isEdit = true;
-        model.addAttribute("contactGroups", savedGroup);
+
+        return initializing(model);
+    }
+
+    public String selectContact(String contactName, int rowCount, Model model) {
+
+        if (!contactName.equals("empty")) {
+
+            selectRow = rowCount; // save row count
+            selectedRow = selectRow;
+
+            if (existContact == null)
+                existContact = new Contact();
+            existContact = contactsRepository.findByName(contactName);
+        }
+
+        return initializing(model);
+    }
+
+    public String updateGroup(Model model) {
+
+        isEditing = true;
+        model.addAttribute("contactGroups", existGroups);
+
         return "newGroup";
     }
 
-    public String deleteSelectedGroup(Model model) {
-        if (rowCount != 0) {
-            contactGroupsRepository.delete(savedGroup);
-        } else {
-            rowCount = -1;
-        }
+    public String updateContact(Model model) {
 
-        return initialize(model);
+        isEditing = true;
+        model.addAttribute("contacts", existContact);
+
+        return "newContact";
     }
 
-    public String saveGroupObjectBySelectedRow(String groupName, int rowCountIn, Model model) {
-        if (savedGroup == null) {
-            rowCount = rowCountIn;
-            savedGroup = new ContactGroups();
-            savedGroup = contactGroupsRepository.findById(groupName);
+    public String deleteGroup(Model model) {
+
+        if (selectedRow != 0) {
+            contactGroupsRepository.delete(existGroups);
         }
-        if (!savedGroup.getName().equals("") && !savedGroup.getName().equals(groupName)) {
-            rowCount = rowCountIn;
-            savedGroup = contactGroupsRepository.findById(groupName);
-        }
-        return initialize(model);
+
+        return initializing(model);
     }
 
-    private String initialize(Model model) {
+    public String deleteContact(Model model) {
 
-        model.addAttribute("btnNewContactGroup", "New Contact Group");
-        List<ContactGroups> contactGroups = new LinkedList<>();
-        if (contactGroupsRepository.findAll().size() > 0) {
-            model.addAttribute("btnNewContact", "New Contact");
-            contactGroups = contactGroupsRepository.findAll();
+        if (selectedRow != 0) {
+            contactsRepository.delete(existContact);
         }
-        if (contactGroups.isEmpty()) {
-            model.addAttribute("contactGroups", new ContactGroups("empty"));
-            model.addAttribute("btnNewContact", "-");
-            model.addAttribute("contacts", new Contacts("-", "-", "-", null));
-        } else {
-            List<Contacts> contacts = new LinkedList<>();
-            long groupId;
-            if (savedGroup == null) {
-                groupId = contactGroups.get(0).getId();
-            } else {
-                groupId = savedGroup.getId();
-                model.addAttribute("panelHeadLabel", savedGroup.getName());
-            }
-            if (!contactsRepository.findAllByContactGroupsId(groupId).isEmpty()) {
-                contacts = contactsRepository.findAllByContactGroupsId(groupId);
-            } else {
-                contacts.add(new Contacts("empty", "empty", "empty", null));
-            }
-            model.addAttribute("contactGroups", contactGroups);
-            model.addAttribute("contacts", contacts);
-        }
-        model.addAttribute("noSelectedRowException", rowCount);
-        rowCount = 0;
 
-        return "index";
-
+        return initializing(model);
     }
-
 }

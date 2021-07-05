@@ -43,7 +43,7 @@
                     </tr>
                     </thead>
                     <tbody id = "loadContactGroups">
-                    <!--add rows-->
+                        <!--add rows-->
                     </tbody>
                 </table>
             </div>
@@ -51,9 +51,9 @@
     </div>
 
     <div class="panel panel-primary">
-        <div class="panel-heading" th:text="${panelHeadLabel} ?: 'Contacts'">Contacts</div>
+        <div class="panel-heading" th:text="${panelHeadLabel} ?: 'Contact'">Contacts</div>
         <div class="panel-body">
-            <a href="/newContact" class="btn btn-default" role="button" th:text="${btnNewContact}">New Contact Button</a>
+            <a href="/newContact" class="btn btn-default" role="button" onclick="validationSelectRow()" th:text="${btnNewContact}">New Contact Button</a>
             <div class="table-div">
                 <table class="table">
                     <thead>
@@ -76,16 +76,13 @@
 
     <script th:inline="javascript">
 
-        let selectedGroupRadioBtnStatus = /*[[${noSelectedRowException}]]*/ 0;
-        if (selectedGroupRadioBtnStatus === -1) {
-            alert("Sor nincs kiválasztva!");
-        }
+        let currentSelectedGroup = /*[[${currSelectedGroup}]]*/ 0;
 
         document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
         function loadContactGroups() {
 
             let result = "",
-                name = "";
+                name;
 
             /*<![CDATA[*/
             /*[# th:each="contactGroup : ${contactGroups}" ]*/
@@ -95,20 +92,20 @@
             result +=
                 "<tr>\n" +
                     "<td>\n" +
-                        "<form id=\"getGroupName\" action=\"/sendGroupName\" method=\"POST\">\n" +
-                            "<input type=\"radio\" name=\"groupName\" id=\"rowRadio\" onclick=\"selectedRow()\">\n" +
-                            "<input type=\"hidden\" name=\"rowCount\">\n" +
+                        "<form action='/selectGroup' method='post'>\n" +
+                            "<input type='radio' id='rowRadio' name='groupName' onclick='selectRow(1)'>\n" +
+                            "<input type='hidden' name='rowCount'>\n" +
                         "</form>\n" +
                     "</td>\n" +
-                    "<td id=\"groupName\">" + name + "</td>\n" +
+                    "<td id='groupName'>" + name + "</td>\n" +
                     "<td>\n" +
-                        "<a href=\"/editGroup\">" +
-                            "<span class=\"glyphicon glyphicon-pencil\"></span>" +
+                        "<a href='/editGroup'>" +
+                            "<span class='glyphicon glyphicon-pencil'></span>" +
                         "</a>\n" +
                     "</td>\n" +
                     "<td>" +
-                        "<a href=\"/deleteGroup\">" +
-                            "<span class=\"glyphicon glyphicon-trash\"></span>" +
+                        "<a href='/deleteGroup'>" +
+                            "<span class='glyphicon glyphicon-trash'></span>" +
                         "</a>" +
                     "</td>\n" +
                 "</tr>";
@@ -118,48 +115,42 @@
 
             return result;
 
-        }
-
-        if (selectedGroupRadioBtnStatus !== -1) {
-            document.getElementsByTagName("tr")[selectedGroupRadioBtnStatus]
-                .getElementsByTagName("input")[0]
-                .checked = true;
         }
 
         document.getElementById("loadContacts").innerHTML = loadContacts();
         function loadContacts() {
 
             let result = "",
-                name = "",
-                phoneNumber = "",
-                eMail = "";
+                name,
+                phoneNumber,
+                email;
 
             /*<![CDATA[*/
             /*[# th:each="contact : ${contacts}" ]*/
 
             name = /*[[${contact.name}]]*/ 'name';
             phoneNumber = /*[[${contact.phoneNumber}]]*/ 'phoneNumber';
-            eMail = /*[[${contact.eMail}]]*/ 'email';
+            email = /*[[${contact.email}]]*/ 'email';
 
             result +=
                 "<tr>\n" +
                     "<td>\n" +
-                        "<form id=\"\" action=\"\" method=\"POST\">\n" +
-                            "<input type=\"radio\" name=\"\" id=\"rowRadio\" onclick=\"\">\n" +
-                            "<input type=\"hidden\" name=\"rowCount\">\n" +
+                        "<form action='/selectContact' method='post'>\n" +
+                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectRow(3)'>\n" +
+                            "<input type='hidden' name='rowCount'>\n" +
                         "</form>\n" +
                     "</td>\n" +
                     "<td>" + name + "</td>\n" +
                     "<td>" + phoneNumber + "</td>\n" +
-                    "<td>" + eMail + "</td>\n" +
+                    "<td>" + email + "</td>\n" +
                     "<td>\n" +
-                        "<a href=\"\">" +
-                            "<span class=\"glyphicon glyphicon-pencil\"></span>" +
+                        "<a href='/editContact'>" +
+                            "<span class='glyphicon glyphicon-pencil'></span>" +
                         "</a>\n" +
                     "</td>\n" +
                     "<td>" +
-                        "<a href=\"\">" +
-                            "<span class=\"glyphicon glyphicon-trash\"></span>" +
+                        "<a href='/deleteContact'>" +
+                            "<span class='glyphicon glyphicon-trash'></span>" +
                         "</a>" +
                     "</td>\n" +
                 "</tr>";
@@ -170,21 +161,15 @@
 
         }
 
-        function selectedRow() {
-
-            if (selectedGroupRadioBtnStatus !== -1) {
-                if (document.getElementsByTagName("tr")[selectedGroupRadioBtnStatus]
-                    .getElementsByTagName("input")[0]
-                    .checked === true) {
-
-                    document.getElementsByTagName("tr")[selectedGroupRadioBtnStatus]
-                        .getElementsByTagName("input")[0]
-                        .checked = false;
-                }
+        function validationSelectRow() {
+            if (currentSelectedGroup <= 0) {
+                alert("A művelethez ki kell választania egy sort.");
             }
+        }
 
-            let i;
-            for (i = 1; i < document.getElementsByTagName("tr").length; i++) {
+        function selectRow(i) {
+
+            while (i < document.getElementsByTagName("tr").length) {
 
                 if (document.getElementsByTagName("tr")[i].getElementsByTagName("input")[0].checked === true) {
 
@@ -198,6 +183,7 @@
                     break;
                 }
 
+                i++;
             }
 
         }
