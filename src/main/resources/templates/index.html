@@ -76,7 +76,8 @@
 
     <script th:inline="javascript">
 
-        let currentSelectedGroup = /*[[${currSelectedGroup}]]*/ 0;
+        let currentSelectedGroup = /*[[${currSelectedGroup}]]*/ 0,
+            groups = /*[[${groupCount}]]*/ 0;
 
         document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
         function loadContactGroups() {
@@ -136,7 +137,7 @@
                 "<tr>\n" +
                     "<td>\n" +
                         "<form action='/selectContact' method='post'>\n" +
-                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectRow(3)'>\n" +
+                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectRow(groups + 2)'>\n" +
                             "<input type='hidden' name='rowCount'>\n" +
                         "</form>\n" +
                     "</td>\n" +

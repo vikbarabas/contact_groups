@@ -74,6 +74,8 @@ public class ContactGroupService {
             model.addAttribute("contactGroups", group);
             model.addAttribute("contacts", contacts);
 
+            model.addAttribute("groupCount", group.size());
+
         }
 
         model.addAttribute("currSelectedGroup", selectRow);
