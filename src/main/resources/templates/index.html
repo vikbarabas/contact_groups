@@ -76,8 +76,7 @@
 
     <script th:inline="javascript">
 
-        let currentSelectedGroup = /*[[${currSelectedGroup}]]*/ 0,
-            groups = /*[[${groupCount}]]*/ 0;
+        let currentSelectedGroup = /*[[${currSelectedGroup}]]*/ -1;
 
         document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
         function loadContactGroups() {
@@ -91,10 +90,10 @@
             name = /*[[${contactGroup.name}]]*/ "name";
 
             result +=
-                "<tr>\n" +
+                "<tr class='groupsPart'>\n" +
                     "<td>\n" +
                         "<form action='/selectGroup' method='post'>\n" +
-                            "<input type='radio' id='rowRadio' name='groupName' onclick='selectRow(1)'>\n" +
+                            "<input type='radio' id='rowRadio' name='groupName' onclick='selectGroup()'>\n" +
                             "<input type='hidden' name='rowCount'>\n" +
                         "</form>\n" +
                     "</td>\n" +
@@ -134,10 +133,10 @@
             email = /*[[${contact.email}]]*/ 'email';
 
             result +=
-                "<tr>\n" +
+                "<tr class='contactsPart' >\n" +
                     "<td>\n" +
                         "<form action='/selectContact' method='post'>\n" +
-                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectRow(groups + 2)'>\n" +
+                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectContact(0)'>\n" +
                             "<input type='hidden' name='rowCount'>\n" +
                         "</form>\n" +
                     "</td>\n" +
@@ -163,23 +162,46 @@
         }
 
         function validationSelectRow() {
-            if (currentSelectedGroup <= 0) {
+            if (currentSelectedGroup < 0) {
                 alert("A művelethez ki kell választania egy sort.");
             }
         }
 
-        function selectRow(i) {
+        function selectGroup() {
 
-            while (i < document.getElementsByTagName("tr").length) {
+            let i = 0;
+            while (i < document.getElementsByClassName("groupsPart").length) {
 
-                if (document.getElementsByTagName("tr")[i].getElementsByTagName("input")[0].checked === true) {
+                if (document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[0].checked === true) {
 
-                    document.getElementsByTagName("tr")[i].getElementsByTagName("input")[0].value =
-                        document.getElementsByTagName("tr")[i].getElementsByTagName("td")[1].innerText;
+                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[0].value =
+                        document.getElementsByClassName("groupsPart")[i].getElementsByTagName("td")[1].innerText;
 
-                    document.getElementsByTagName("tr")[i].getElementsByTagName("input")[1].value = i;
+                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[1].value = i;
 
-                    document.getElementsByTagName("tr")[i].getElementsByTagName("form")[0].submit();
+                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("form")[0].submit();
+
+                    break;
+                }
+
+                i++;
+            }
+
+        }
+
+        function selectContact() {
+
+            let i = 0;
+            while (i < document.getElementsByClassName("contactsPart").length) {
+
+                if (document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[0].checked === true) {
+
+                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[0].value =
+                        document.getElementsByClassName("contactsPart")[i].getElementsByTagName("td")[1].innerText;
+
+                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[1].value = i;
+
+                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("form")[0].submit();
 
                     break;
                 }

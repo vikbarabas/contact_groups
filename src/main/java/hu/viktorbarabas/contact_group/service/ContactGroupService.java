@@ -74,12 +74,10 @@ public class ContactGroupService {
             model.addAttribute("contactGroups", group);
             model.addAttribute("contacts", contacts);
 
-            model.addAttribute("groupCount", group.size());
-
         }
 
         model.addAttribute("currSelectedGroup", selectRow);
-        selectRow = 0;
+        selectRow = -1;
 
         return "index";
     }
@@ -183,7 +181,7 @@ public class ContactGroupService {
 
     public String deleteGroup(Model model) {
 
-        if (selectedRow != 0) {
+        if (selectedRow >= 0) {
             contactGroupsRepository.delete(existGroups);
         }
 
@@ -192,7 +190,7 @@ public class ContactGroupService {
 
     public String deleteContact(Model model) {
 
-        if (selectedRow != 0) {
+        if (selectedRow >= 0) {
             contactsRepository.delete(existContact);
         }
 
