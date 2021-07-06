@@ -53,7 +53,7 @@
     <div class="panel panel-primary">
         <div class="panel-heading" th:text="${panelHeadLabel} ?: 'Contact'">Contacts</div>
         <div class="panel-body">
-            <a href="/newContact" class="btn btn-default" role="button" onclick="validationSelectRow()" th:text="${btnNewContact}">New Contact Button</a>
+            <a id="gotToNewContact" href="#" class="btn btn-default" role="button" onclick="validationSelectRow()" th:text="${btnNewContact}">New Contact Button</a>
             <div class="table-div">
                 <table class="table">
                     <thead>
@@ -164,7 +164,9 @@
         function validationSelectRow() {
             if (currentSelectedGroup < 0) {
                 alert("A művelethez ki kell választania egy sort.");
-            }
+            } else
+                document.getElementById("gotToNewContact").setAttribute("href", "/newContact");
+
         }
 
         function selectGroup() {
@@ -177,7 +179,7 @@
                     document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[0].value =
                         document.getElementsByClassName("groupsPart")[i].getElementsByTagName("td")[1].innerText;
 
-                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[1].value = i;
+                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[1].value = i.toString(10);
 
                     document.getElementsByClassName("groupsPart")[i].getElementsByTagName("form")[0].submit();
 
@@ -199,7 +201,7 @@
                     document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[0].value =
                         document.getElementsByClassName("contactsPart")[i].getElementsByTagName("td")[1].innerText;
 
-                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[1].value = i;
+                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[1].value = i.toString(10);
 
                     document.getElementsByClassName("contactsPart")[i].getElementsByTagName("form")[0].submit();
 
