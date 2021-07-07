@@ -187,6 +187,11 @@ public class ContactGroupService {
     public String deleteGroup(Model model) {
 
         if (selectedRow >= 0) {
+
+            for (Contact contact : contactsRepository.findAllByContactGroupsId(existGroups.getId())) {
+                contactsRepository.delete(contact);
+            }
+
             contactGroupsRepository.delete(existGroups);
         }
 

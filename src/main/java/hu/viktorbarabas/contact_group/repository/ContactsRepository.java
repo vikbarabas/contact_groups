@@ -15,6 +15,6 @@ public interface ContactsRepository extends CrudRepository<Contact, Long> {
     Contact findByName(@Param("name") String name);
 
     @Query(value = "SELECT c FROM Contact c WHERE c.contactGroup.id = :id")
-    List<Contact> findAllByContactGroupsId(@Param("id") Long id);
+    List<Contact> findAllByContactGroupsId(@Param("id") long id);
 
 }

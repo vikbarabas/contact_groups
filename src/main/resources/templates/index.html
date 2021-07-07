@@ -94,7 +94,7 @@
                 "<tr class='groupsPart'>\n" +
                     "<td>\n" +
                         "<form action='/selectGroup' method='post'>\n" +
-                            "<input type='radio' id='rowRadio' name='groupName' onclick='selectGroup()'>\n" +
+                            "<input type='radio' id='rowRadio' name='groupName' onclick='selectRow(\"groupsPart\")'>\n" +
                             "<input type='hidden' name='rowCount'>\n" +
                             "<input type='hidden' name='part'>\n" +
                         "</form>\n" +
@@ -138,7 +138,7 @@
                 "<tr class='contactsPart' >\n" +
                     "<td>\n" +
                         "<form action='/selectContact' method='post'>\n" +
-                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectContact()'>\n" +
+                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectRow(\"contactsPart\")'>\n" +
                             "<input type='hidden' name='rowCount'>\n" +
                             "<input type='hidden' name='part'>\n" +
                         "</form>\n" +
@@ -177,43 +177,20 @@
 
         }
 
-        function selectGroup() {
+        function selectRow(partName) {
 
             let i = 0;
-            while (i < document.getElementsByClassName("groupsPart").length) {
+            while (i < document.getElementsByClassName(partName).length) {
 
-                if (document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[0].checked === true) {
+                if (document.getElementsByClassName(partName)[i].getElementsByTagName("input")[0].checked === true) {
 
-                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[0].value =
-                        document.getElementsByClassName("groupsPart")[i].getElementsByTagName("td")[1].innerText;
+                    document.getElementsByClassName(partName)[i].getElementsByTagName("input")[0].value =
+                        document.getElementsByClassName(partName)[i].getElementsByTagName("td")[1].innerText;
 
-                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[1].value = i.toString(10);
-                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[2].value = "groupsPart";
+                    document.getElementsByClassName(partName)[i].getElementsByTagName("input")[1].value = i.toString(10);
+                    document.getElementsByClassName(partName)[i].getElementsByTagName("input")[2].value = partName;
 
-                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("form")[0].submit();
-
-                    break;
-                }
-
-                i++;
-            }
-
-        }
-
-        function selectContact() {
-
-            let i = 0;
-            while (i < document.getElementsByClassName("contactsPart").length) {
-
-                if (document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[0].checked === true) {
-
-                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[0].value =
-                        document.getElementsByClassName("contactsPart")[i].getElementsByTagName("td")[1].innerText;
-
-                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[1].value = i.toString(10);
-                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[2].value = "contactsPart";
-
-                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("form")[0].submit();
+                    document.getElementsByClassName(partName)[i].getElementsByTagName("form")[0].submit();
 
                     break;
                 }
