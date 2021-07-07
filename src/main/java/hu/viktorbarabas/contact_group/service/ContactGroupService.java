@@ -22,6 +22,7 @@ public class ContactGroupService {
 
     private int selectRow;
     private int selectedRow;
+    private String selectedPart;
 
     private boolean isEditing;
 
@@ -77,7 +78,9 @@ public class ContactGroupService {
         }
 
         model.addAttribute("currSelectedGroup", selectRow);
+        model.addAttribute("selectedPart", selectedPart);
         selectRow = -1;
+        selectedPart = "";
 
         return "index";
     }
@@ -133,12 +136,13 @@ public class ContactGroupService {
         return initializing(model);
     }
 
-    public String selectGroup(String groupName, int rowCount, Model model) {
+    public String selectGroup(String groupName, int rowCount, String part, Model model) {
 
         if (!groupName.equals("empty")) {
 
             selectRow = rowCount; // save row count
             selectedRow = selectRow;
+            selectedPart = part;
 
             if (existGroups == null)
                 existGroups = new ContactGroup();
@@ -148,12 +152,13 @@ public class ContactGroupService {
         return initializing(model);
     }
 
-    public String selectContact(String contactName, int rowCount, Model model) {
+    public String selectContact(String contactName, int rowCount, String part, Model model) {
 
         if (!contactName.equals("empty")) {
 
             selectRow = rowCount; // save row count
             selectedRow = selectRow;
+            selectedPart = part;
 
             if (existContact == null)
                 existContact = new Contact();

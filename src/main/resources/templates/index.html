@@ -76,7 +76,8 @@
 
     <script th:inline="javascript">
 
-        let currentSelectedGroup = /*[[${currSelectedGroup}]]*/ -1;
+        let selectedRow = /*[[${currSelectedGroup}]]*/ -1,
+            selectedPart = /*[[${selectedPart}]]*/ '';
 
         document.getElementById("loadContactGroups").innerHTML = loadContactGroups();
         function loadContactGroups() {
@@ -95,6 +96,7 @@
                         "<form action='/selectGroup' method='post'>\n" +
                             "<input type='radio' id='rowRadio' name='groupName' onclick='selectGroup()'>\n" +
                             "<input type='hidden' name='rowCount'>\n" +
+                            "<input type='hidden' name='part'>\n" +
                         "</form>\n" +
                     "</td>\n" +
                     "<td id='groupName'>" + name + "</td>\n" +
@@ -136,8 +138,9 @@
                 "<tr class='contactsPart' >\n" +
                     "<td>\n" +
                         "<form action='/selectContact' method='post'>\n" +
-                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectContact(0)'>\n" +
+                            "<input type='radio' id='rowRadio' name='contactName' onclick='selectContact()'>\n" +
                             "<input type='hidden' name='rowCount'>\n" +
+                            "<input type='hidden' name='part'>\n" +
                         "</form>\n" +
                     "</td>\n" +
                     "<td>" + name + "</td>\n" +
@@ -161,8 +164,13 @@
 
         }
 
+        if (selectedPart.length !== 0) {
+            document.getElementsByClassName(selectedPart)[selectedRow].getElementsByTagName("input")[0].checked = true;
+            selectedPart = '';
+        }
+
         function validationSelectRow() {
-            if (currentSelectedGroup < 0) {
+            if (selectedRow < 0) {
                 alert("A művelethez ki kell választania egy sort.");
             } else
                 document.getElementById("gotToNewContact").setAttribute("href", "/newContact");
@@ -180,6 +188,7 @@
                         document.getElementsByClassName("groupsPart")[i].getElementsByTagName("td")[1].innerText;
 
                     document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[1].value = i.toString(10);
+                    document.getElementsByClassName("groupsPart")[i].getElementsByTagName("input")[2].value = "groupsPart";
 
                     document.getElementsByClassName("groupsPart")[i].getElementsByTagName("form")[0].submit();
 
@@ -202,6 +211,7 @@
                         document.getElementsByClassName("contactsPart")[i].getElementsByTagName("td")[1].innerText;
 
                     document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[1].value = i.toString(10);
+                    document.getElementsByClassName("contactsPart")[i].getElementsByTagName("input")[2].value = "contactsPart";
 
                     document.getElementsByClassName("contactsPart")[i].getElementsByTagName("form")[0].submit();
 

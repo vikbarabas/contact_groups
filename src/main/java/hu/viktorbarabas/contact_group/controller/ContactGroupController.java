@@ -49,15 +49,17 @@ public class ContactGroupController {
     public String selectGroup(
             @RequestParam("groupName") String groupName,
             @RequestParam("rowCount") int rowCount,
+            @RequestParam("part") String part,
             Model model) {
-        return service.selectGroup(groupName, rowCount, model);
+        return service.selectGroup(groupName, rowCount, part, model);
     }
     @PostMapping(value = "/selectContact")
     public String selectContact(
             @RequestParam("contactName") String contactName,
             @RequestParam("rowCount") int rowCount,
+            @RequestParam("part") String part,
             Model model) {
-        return service.selectContact(contactName, rowCount, model);
+        return service.selectContact(contactName, rowCount, part, model);
     }
 
     @GetMapping(value = "/editGroup")
